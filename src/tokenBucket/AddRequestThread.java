@@ -2,15 +2,13 @@ package tokenBucket;
 
 import commons.RandomString;
 
-import java.time.Instant;
-
 class AddRequestThread extends Thread {
-    Bucket bucket;
+    TokenBucket tokenBucket;
     int requestsPerSecond;
     private final int sleepDuration;
 
-    AddRequestThread(Bucket bucket, int requestsPerSecond) {
-        this.bucket = bucket;
+    AddRequestThread(TokenBucket tokenBucket, int requestsPerSecond) {
+        this.tokenBucket = tokenBucket;
         this.requestsPerSecond = requestsPerSecond;
         this.sleepDuration = 1000/requestsPerSecond;
     }
@@ -22,12 +20,11 @@ class AddRequestThread extends Thread {
             } catch (Exception e) {
                 // Silently ignore exception
             }
-            Instant currentTime = Instant.now();
 
             String requestId = new RandomString().nextString();
 
             try {
-                bucket.acquireToken(requestId);
+                tokenBucket.acquireToken(requestId);
             } catch (Exception e) {
             }
         }

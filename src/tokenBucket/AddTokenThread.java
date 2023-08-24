@@ -1,19 +1,19 @@
 package tokenBucket;
 
 class AddTokenThread extends Thread {
-    Bucket bucket;
-    int bucketFillRatePerSecond;
+    TokenBucket tokenBucket;
+    int tokenFillRatePerSecond;
     private final int sleepDuration;
 
-    AddTokenThread(Bucket bucket, int bucketFillRatePerSecond) {
-        this.bucket = bucket;
-        this.bucketFillRatePerSecond = bucketFillRatePerSecond;
-        this.sleepDuration = 1000/bucketFillRatePerSecond;
+    AddTokenThread(TokenBucket tokenBucket, int tokenFillRatePerSecond) {
+        this.tokenBucket = tokenBucket;
+        this.tokenFillRatePerSecond = tokenFillRatePerSecond;
+        this.sleepDuration = 1000 / tokenFillRatePerSecond;
     }
 
     public void run() {
         while (true) {
-            bucket.addToken();
+            tokenBucket.addToken();
 
             try {
                 Thread.sleep(sleepDuration);

@@ -1,20 +1,39 @@
 package tokenBucket;
 
+import java.time.Instant;
+
 class TokenBucket {
-    public static void main(String args[]) {
-        Bucket bucket = new Bucket(Constants.MAX_BUCKET_SIZE, Constants.TOKEN_FILL_RATE_PER_SECOND);
+    private int tokens;
+    private final int maximumSize;
 
-        try {
-            // This is present to provide some time for the token bucket to be filled up.
-            Thread.sleep(Constants.INITIAL_DELAY_MS_FOR_TOKEN_BUCKET_FILL);
-        } catch (Exception e) {
+    TokenBucket(int maximumSize, int tokenFillRatePerSecond) {
+        tokens = 0;
+        this.maximumSize = maximumSize;
+
+        Thread addTokenThread = new AddTokenThread(this, tokenFillRatePerSecond);
+        addTokenThread.start();
+    }
+
+    synchronized void addToken() {
+        Instant currentTime = Instant.now();
+
+        if (tokens >= maximumSize) {
+            System.out.println(currentTime + "\tBucket overflow. Total Tokens:" + tokens);
+            return;
         }
+        tokens++;
+        System.out.println(currentTime + "\tAdded a token. Total Tokens:" + tokens);
+    }
 
-        Thread requestThread = new AddRequestThread(bucket, Constants.REQUESTS_PER_SECOND);
+    synchronized void acquireToken(String requestId) {
+        Instant currentTime = Instant.now();
 
-        try {
-            requestThread.start();
-        } catch (Exception e) {
+        if (tokens < 1) {
+            System.out.println(currentTime + "\tDiscarding requestId: " + requestId + "\tAvailable tokens: " + tokens);
+            throw new IllegalArgumentException("Too many requests...");
+        } else {
+            tokens--;
+            System.out.println(currentTime + "\tForwarding requestId: " + requestId + "\tAvailable tokens: " + tokens);
         }
     }
 }
