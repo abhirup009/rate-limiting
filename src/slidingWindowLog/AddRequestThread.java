@@ -1,14 +1,14 @@
-package slidingWindowCounter;
+package slidingWindowLog;
 
 import commons.RandomString;
 
 class AddRequestThread extends Thread {
-    SlidingWindowCounter slidingWindowCounter;
+    SlidingWindowLog slidingWindowLog;
     int requestsPerSecond;
     private final int sleepDuration;
 
-    AddRequestThread(SlidingWindowCounter slidingWindowCounter, int requestsPerSecond) {
-        this.slidingWindowCounter = slidingWindowCounter;
+    AddRequestThread(SlidingWindowLog slidingWindowLog, int requestsPerSecond) {
+        this.slidingWindowLog = slidingWindowLog;
         this.requestsPerSecond = requestsPerSecond;
         this.sleepDuration = 1000 / requestsPerSecond;
     }
@@ -23,7 +23,7 @@ class AddRequestThread extends Thread {
 
             String requestId = new RandomString().nextString();
 
-            slidingWindowCounter.isAllowed(requestId);
+            slidingWindowLog.isAllowed(requestId);
         }
     }
 }
