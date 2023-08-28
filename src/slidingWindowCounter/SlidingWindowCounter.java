@@ -7,11 +7,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SlidingWindow {
+public class SlidingWindowCounter {
     private final ConcurrentMap<Instant, AtomicInteger> windows = new ConcurrentHashMap<>();
     int maximumRequestPerSec;
 
-    protected SlidingWindow(int maximumRequestPerSec) {
+    protected SlidingWindowCounter(int maximumRequestPerSec) {
         this.maximumRequestPerSec = maximumRequestPerSec;
     }
 
